@@ -5,6 +5,7 @@ import { useCart } from '../../CartContext/CartContext';
 import { FaMinus, FaPlus } from 'react-icons/fa';
 import './Omh.css';
 
+const url = import.meta.env.VITE_BACKEND_URL;
 const categories = ['Breakfast', 'Lunch', 'Dinner', 'Mexican', 'Italian', 'Desserts', 'Drinks'];
 
 const OurMenuHome = () => {
@@ -15,7 +16,7 @@ const OurMenuHome = () => {
   const cartItems = rawCart.filter(ci => ci.item);
 
   useEffect(() => {
-    axios.get('http://localhost:4000/api/items')
+    axios.get(`${url}/api/items`)
       .then(res => {
         const grouped = res.data.reduce((acc, item) => {
           acc[item.category] = acc[item.category] || [];

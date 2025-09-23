@@ -3,6 +3,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useCart } from '../../CartContext/CartContext';
 
+const url = import.meta.env.VITE_BACKEND_URL;
+
 const VerifyPaymentPage = () => {
     const { clearCart } = useCart();
     const { search } = useLocation();
@@ -30,7 +32,7 @@ const VerifyPaymentPage = () => {
         }
 
         // Stripe says success=true & we have a session_id:
-        axios.get('http://localhost:4000/api/orders/confirm', {
+        axios.get(`${url}/api/orders/confirm`, {
             params: { session_id },
             headers: authHeaders
         })

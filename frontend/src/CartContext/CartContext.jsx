@@ -2,7 +2,7 @@ import React, { createContext, useContext, useReducer, useEffect, useCallback } 
 import axios from 'axios';
 
 const CartContext = createContext();
-
+const url = import.meta.env.VITE_BACKEND_URL;
 // State shape: [ { _id, item: { _id, name, price, … }, quantity }, … ]
 const cartReducer = (state, action) => {
   switch (action.type) {
@@ -58,7 +58,7 @@ export const CartProvider = ({ children }) => {
   useEffect(() => {
     const token = localStorage.getItem('authToken');
     axios
-      .get('http://localhost:4000/api/cart', {
+      .get(`${url}/api/cart`, {
         withCredentials: true,
         headers: { Authorization: `Bearer ${token}` },
       })
@@ -69,7 +69,7 @@ export const CartProvider = ({ children }) => {
   const addToCart = useCallback(async (item, qty) => {
     const token = localStorage.getItem('authToken');
     const res = await axios.post(
-      'http://localhost:4000/api/cart',
+      `${url}/api/cart`,
       { itemId: item._id, quantity: qty },
       { withCredentials: true, headers: { Authorization: `Bearer ${token}` } }
     );
@@ -79,7 +79,7 @@ export const CartProvider = ({ children }) => {
   const updateQuantity = useCallback(async (_id, qty) => {
     const token = localStorage.getItem('authToken');
     const res = await axios.put(
-      `http://localhost:4000/api/cart/${_id}`,
+      `${url}/api/cart/${_id}`,
       { quantity: qty },
       { withCredentials: true, headers: { Authorization: `Bearer ${token}` } }
     );
@@ -90,7 +90,7 @@ export const CartProvider = ({ children }) => {
   const removeFromCart = useCallback(async _id => {
     const token = localStorage.getItem('authToken');
     await axios.delete(
-      `http://localhost:4000/api/cart/${_id}`,
+      `${url}/api/cart/${_id}`,
       { withCredentials: true, headers: { Authorization: `Bearer ${token}` } }
     );
     dispatch({ type: 'REMOVE_ITEM', payload: _id });
@@ -99,7 +99,7 @@ export const CartProvider = ({ children }) => {
   const clearCart = useCallback(async () => {
     const token = localStorage.getItem('authToken');
     await axios.post(
-      'http://localhost:4000/api/cart/clear',
+      `${url}/api/cart/clear`,
       {},
       { withCredentials: true, headers: { Authorization: `Bearer ${token}` } }
     );

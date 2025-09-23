@@ -5,6 +5,8 @@ import { HiMinus, HiPlus } from 'react-icons/hi';
 import { useCart } from '../../CartContext/CartContext';
 import FloatingParticle from '../FloatingParticle/FloatingParticle';
 
+const url = import.meta.env.VITE_BACKEND_URL;
+
 const SpecialOffer = () => {
   const [showAll, setShowAll] = useState(false);
   const [items, setItems] = useState([]);
@@ -17,7 +19,7 @@ const SpecialOffer = () => {
   // Fetch menu items
   useEffect(() => {
     axios
-      .get('http://localhost:4000/api/items')
+      .get(`${url}/api/items`)
       .then(res => setItems(res.data.items ?? res.data))
       .catch(err => console.error(err));
   }, []);

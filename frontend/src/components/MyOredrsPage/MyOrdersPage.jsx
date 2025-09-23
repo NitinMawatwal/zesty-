@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { useCart } from '../../CartContext/CartContext';
 
+const url = import.meta.env.VITE_BACKEND_URL;
+
 const UserOrdersPage = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -14,7 +16,7 @@ const UserOrdersPage = () => {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const response = await axios.get('http://localhost:4000/api/orders', {
+        const response = await axios.get(`${url}/api/orders`, {
           params: { email: user?.email },
           headers: {
             Authorization: `Bearer ${localStorage.getItem('authToken')}`
@@ -203,7 +205,7 @@ const UserOrdersPage = () => {
                               className="flex items-center gap-3 p-2 bg-[#3a2b2b]/50 rounded-lg"
                             >
                               <img
-                                src={`http://localhost:4000${item.item.imageUrl}`}
+                                src={`${url}${item.item.imageUrl}`}
                                 alt={item.item.name}
                                 className="w-10 h-10 object-cover rounded-lg"
                               />

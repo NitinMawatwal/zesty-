@@ -2,9 +2,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { FaEye, FaEyeSlash, FaCheckCircle,FaArrowLeft  } from 'react-icons/fa';
+import { FaEye, FaEyeSlash, FaCheckCircle, FaArrowLeft } from 'react-icons/fa';
 
-const url = 'http://localhost:4000'
+const url = import.meta.env.VITE_BACKEND_URL;
 
 const AwesomeToast = ({ message, icon }) => (
   <div className="animate-slide-in fixed bottom-6 right-6 flex items-center bg-gradient-to-br from-amber-500 to-amber-600 px-6 py-4 rounded-lg shadow-lg border-2 border-amber-300/20">
@@ -34,40 +34,31 @@ const SignUp = () => {
   const handleChange = e =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
-    const handleSubmit = async e => {
-      e.preventDefault();
-      console.log('🟢 SignUp handleSubmit fired', formData);
-    
-      try {
-        const res = await axios.post(`${url}/api/user/register`, formData);
-        console.log('🟢 register response:', res.data);
-    
-        // **NEW**: check the actual `success` flag & token
-        if (res.data.success && res.data.token) {
-          // (optional) persist the JWT from registration
-          localStorage.setItem('authToken', res.data.token);
-    
-          setToast({
-            visible: true,
-            message: 'Sign Up Successful!',
-            icon: <FaCheckCircle />,
-          });
-    
-          // **return early** so you don't fall through
-          return;
-        }
-    
-        // if we get here, it was a 200 but `success: false`
-        throw new Error(res.data.message || 'Registration failed.');
-      } catch (err) {
-        console.error('🔴 register error:', err);
-        const msg = err.response?.data?.message || err.message || 'Registration failed.';
-        setToast({ visible: true, message: msg, icon: <FaCheckCircle /> });
+  const handleSubmit = async e => {
+    e.preventDefault();
+    console.log('🟢 SignUp handleSubmit fired', formData);
+
+    try {
+      const res = await axios.post(`${url}/api/user/register`, formData);
+      console.log('🟢 register response:', res.data);
+
+      if (res.data.success && res.data.token) {
+        localStorage.setItem('authToken', res.data.token);
+        setToast({
+          visible: true,
+          message: 'Sign Up Successful!',
+          icon: <FaCheckCircle />,
+        });
+        return;
       }
-    };
-    
-    
-    
+
+      throw new Error(res.data.message || 'Registration failed.');
+    } catch (err) {
+      console.error('🔴 register error:', err);
+      const msg = err.response?.data?.message || err.message || 'Registration failed.';
+      setToast({ visible: true, message: msg, icon: <FaCheckCircle /> });
+    }
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#1a120b] p-4">
@@ -134,5 +125,6 @@ const SignUp = () => {
       </div>
     </div>
   );
-}
+};
+
 export default SignUp;
